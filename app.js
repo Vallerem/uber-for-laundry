@@ -9,7 +9,8 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
-mongoose.connect('mongodb://localhost/uber-laundry');
+const uri = 'mongodb://localhost/uber-laundry';
+mongoose.connect(uri);
 
 const index = require('./routes/index');
 const users = require('./routes/users');
@@ -23,7 +24,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.set('layout', 'layouts/main-layout');
 app.use(expressLayouts);
-app.locals.title = 'Uber for Laundry';
+app.locals.title = 'Uber 4 Laundry';
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -39,7 +40,7 @@ app.use(session({
   secret: 'never do your own laundry again',
   resave: true,
   saveUninitialized: true,
-  cookie: { maxAge: 60000 },
+  cookie: { maxAge: 600000 },
   store: new MongoStore({
     mongooseConnection: mongoose.connection,
     ttl: 24 * 60 * 60 // 1 day
@@ -53,7 +54,6 @@ app.use((req, res, next) => {
   } else {
     res.locals.isUserLoggedIn = false;
   }
-
   next();
 });
 
